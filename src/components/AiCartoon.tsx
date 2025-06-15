@@ -14,14 +14,24 @@ const AiCartoon: React.FC = () => {
   const characterRef = useRef<HTMLDivElement>(null);
 
   const responses = {
-    timer: "Let me help you track time! Click the timer to set a custom countdown. Perfect for Pomodoro sessions!",
-    music: "Need some focus music? I've got 3 great tracks to keep you motivated while coding!",
-    countdown: "Only a few days left! This Excel VBA training will transform how you work with spreadsheets forever!",
-    codewriter: "Watch me write VBA code! I cycle through 10 powerful examples - from data cleanup to automated reports!",
-    title: "AI-powered macro generation! I can write complex VBA code in seconds. No more manual coding headaches!",
-    details: "Join us at Reliance via MS Teams! I'll teach you to automate Excel like a pro. Save hours every day!",
-    default: "Hi there! I'm your AI assistant. Hover over different elements and I'll tell you more about them!"
+    timer: "Set custom timers for focused work sessions! Perfect for Pomodoro technique while learning VBA!",
+    music: "Boost your productivity with ambient corporate tracks! Music helps you focus while coding.",
+    countdown: "Join us in just a few days! This comprehensive VBA training will revolutionize your Excel workflow!",
+    codewriter: "Watch me demonstrate 10 powerful VBA macros! From data cleanup to automated reports - I'll show you everything!",
+    title: "AI-powered VBA generation at your fingertips! No more manual coding headaches or syntax errors!",
+    details: "Virtual training via MS Teams at Reliance! Learn to automate Excel tasks and save hours every day!",
+    platforms: "Explore other AI assistants! Each has unique strengths for different coding and productivity tasks.",
+    default: "Hi! I'm your VBA learning companion. Hover over elements to discover more about this amazing training!"
   };
+
+  const aiPlatforms = [
+    { name: 'ChatGPT', url: 'https://chat.openai.com', color: '#10a37f' },
+    { name: 'Claude', url: 'https://claude.ai', color: '#cc785c' },
+    { name: 'Gemini', url: 'https://gemini.google.com', color: '#4285f4' },
+    { name: 'DeepSeek', url: 'https://chat.deepseek.com', color: '#6366f1' },
+    { name: 'Grok', url: 'https://grok.x.ai', color: '#1da1f2' },
+    { name: 'Perplexity', url: 'https://www.perplexity.ai', color: '#20b2aa' }
+  ];
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -31,8 +41,8 @@ const AiCartoon: React.FC = () => {
         const centerY = rect.top + rect.height / 2;
         
         setMousePosition({
-          x: (e.clientX - centerX) / 20,
-          y: (e.clientY - centerY) / 20
+          x: (e.clientX - centerX) / 15,
+          y: (e.clientY - centerY) / 15
         });
       }
     };
@@ -41,7 +51,6 @@ const AiCartoon: React.FC = () => {
       const target = e.target as HTMLElement;
       let message = responses.default;
 
-      // Check for specific elements or classes
       if (target.closest('[aria-label="Open Timer"]') || target.closest('button[aria-label="Open Timer"]')) {
         message = responses.timer;
       } else if (target.closest('.music-dropdown') || target.textContent?.includes('Music')) {
@@ -54,6 +63,8 @@ const AiCartoon: React.FC = () => {
         message = responses.title;
       } else if (target.closest('.event-details') || target.textContent?.includes('Reliance') || target.textContent?.includes('Teams')) {
         message = responses.details;
+      } else if (target.closest('.ai-platforms')) {
+        message = responses.platforms;
       }
 
       if (message !== responses.default) {
@@ -77,146 +88,190 @@ const AiCartoon: React.FC = () => {
     
     setTimeout(() => {
       setIsTalking(false);
-    }, 500);
+    }, 600);
 
     setTimeout(() => {
       setIsVisible(false);
-    }, 4000);
+    }, 4500);
   };
 
-  const eyeTransform = `translate(${mousePosition.x * 0.5}, ${mousePosition.y * 0.3})`;
+  const eyeTransform = `translate(${Math.max(-2, Math.min(2, mousePosition.x * 0.3))}, ${Math.max(-1, Math.min(1, mousePosition.y * 0.2))})`;
 
   return (
-    <div ref={characterRef} className="relative animate-float">
-      {/* Speech Bubble */}
-      <div 
-        className={`speech-bubble ${isVisible ? 'visible' : ''}`}
-        style={{
-          top: '-80px',
-          left: '50%',
-        }}
-      >
-        {speechText}
+    <div className="flex flex-col items-center space-y-6">
+      <div ref={characterRef} className="relative animate-float">
+        {/* Speech Bubble */}
+        <div 
+          className={`speech-bubble ${isVisible ? 'visible' : ''}`}
+        >
+          {speechText}
+        </div>
+
+        <svg
+          width="220"
+          height="220"
+          viewBox="0 0 220 220"
+          className="drop-shadow-2xl"
+        >
+          {/* Gradient Definitions */}
+          <defs>
+            <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#065f46" />
+              <stop offset="50%" stopColor="#059669" />
+              <stop offset="100%" stopColor="#10b981" />
+            </linearGradient>
+            <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#047857" />
+              <stop offset="100%" stopColor="#059669" />
+            </linearGradient>
+            <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#064e3b" />
+              <stop offset="100%" stopColor="#065f46" />
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge> 
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          
+          {/* Main Body */}
+          <rect
+            x="70"
+            y="90"
+            width="80"
+            height="95"
+            rx="20"
+            fill="url(#bodyGradient)"
+            className="animate-pulse-glow"
+            filter="url(#glow)"
+          />
+          
+          {/* Head */}
+          <circle
+            cx="110"
+            cy="65"
+            r="35"
+            fill="url(#headGradient)"
+            className={isTalking ? 'animate-talk' : ''}
+            filter="url(#glow)"
+          />
+          
+          {/* Eyes */}
+          <circle cx="95" cy="60" r="8" fill="#fff" />
+          <circle cx="125" cy="60" r="8" fill="#fff" />
+          <circle 
+            cx="95" 
+            cy="60" 
+            r="4" 
+            fill="#064e3b" 
+            className="animate-blink"
+            transform={eyeTransform}
+          />
+          <circle 
+            cx="125" 
+            cy="60" 
+            r="4" 
+            fill="#064e3b" 
+            className="animate-blink"
+            transform={eyeTransform}
+          />
+          
+          {/* Eye highlights */}
+          <circle cx="96" cy="58" r="1.5" fill="#fff" opacity="0.8" />
+          <circle cx="126" cy="58" r="1.5" fill="#fff" opacity="0.8" />
+          
+          {/* Mouth */}
+          <path 
+            d="M 100 75 Q 110 82 120 75" 
+            stroke="#064e3b" 
+            strokeWidth="2" 
+            fill="none"
+            className={isTalking ? 'animate-talk' : ''}
+          />
+          
+          {/* Screen on chest */}
+          <rect
+            x="85"
+            y="105"
+            width="50"
+            height="35"
+            rx="8"
+            fill="url(#screenGradient)"
+            filter="url(#glow)"
+          />
+          
+          {/* Screen content */}
+          <text x="110" y="118" textAnchor="middle" fontSize="10" fill="#10b981" fontFamily="monospace" fontWeight="bold">
+            VBA
+          </text>
+          <text x="110" y="130" textAnchor="middle" fontSize="7" fill="#6ee7b7" fontFamily="monospace">
+            ASSISTANT
+          </text>
+          
+          {/* Arms */}
+          <ellipse 
+            cx="55" 
+            cy="115" 
+            rx="8" 
+            ry="25" 
+            fill="url(#bodyGradient)"
+            className={isTalking ? 'animate-wiggle' : ''}
+            style={{ transformOrigin: '55px 90px' }}
+          />
+          <ellipse 
+            cx="165" 
+            cy="115" 
+            rx="8" 
+            ry="25" 
+            fill="url(#bodyGradient)"
+            className={isTalking ? 'animate-wiggle' : ''}
+            style={{ transformOrigin: '165px 90px', animationDelay: '0.1s' }}
+          />
+          
+          {/* Hands */}
+          <circle cx="55" cy="145" r="10" fill="url(#bodyGradient)" />
+          <circle cx="165" cy="145" r="10" fill="url(#bodyGradient)" />
+          
+          {/* Legs */}
+          <rect x="85" y="185" width="15" height="30" rx="7" fill="url(#bodyGradient)" />
+          <rect x="115" y="185" width="15" height="30" rx="7" fill="url(#bodyGradient)" />
+          
+          {/* Antenna */}
+          <line x1="110" y1="30" x2="110" y2="15" stroke="#059669" strokeWidth="3" />
+          <circle cx="110" cy="12" r="5" fill="#10b981" className="animate-sparkle" filter="url(#glow)" />
+          
+          {/* Sparkles around robot */}
+          <circle cx="50" cy="50" r="2" fill="#6ee7b7" className="animate-sparkle" />
+          <circle cx="170" cy="70" r="2" fill="#10b981" className="animate-sparkle" />
+          <circle cx="45" cy="170" r="2" fill="#6ee7b7" className="animate-sparkle" />
+          <circle cx="175" cy="190" r="2" fill="#10b981" className="animate-sparkle" />
+          <circle cx="200" cy="120" r="2" fill="#6ee7b7" className="animate-sparkle" />
+          <circle cx="20" cy="130" r="2" fill="#10b981" className="animate-sparkle" />
+        </svg>
       </div>
 
-      <svg
-        width="200"
-        height="200"
-        viewBox="0 0 200 200"
-        className="drop-shadow-lg"
-      >
-        {/* Robot Body */}
-        <defs>
-          <linearGradient id="robotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#217346" />
-            <stop offset="100%" stopColor="#70ad47" />
-          </linearGradient>
-          <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0e5c2f" />
-            <stop offset="100%" stopColor="#217346" />
-          </linearGradient>
-        </defs>
-        
-        {/* Main Body */}
-        <rect
-          x="60"
-          y="80"
-          width="80"
-          height="90"
-          rx="15"
-          fill="url(#robotGradient)"
-          className="animate-pulse-glow"
-        />
-        
-        {/* Head */}
-        <rect
-          x="70"
-          y="40"
-          width="60"
-          height="50"
-          rx="20"
-          fill="url(#robotGradient)"
-          className={isTalking ? 'animate-talk' : ''}
-        />
-        
-        {/* Eyes */}
-        <circle cx="85" cy="60" r="6" fill="#fff" />
-        <circle cx="115" cy="60" r="6" fill="#fff" />
-        <circle 
-          cx="85" 
-          cy="60" 
-          r="3" 
-          fill="#0e5c2f" 
-          className="animate-blink"
-          transform={eyeTransform}
-        />
-        <circle 
-          cx="115" 
-          cy="60" 
-          r="3" 
-          fill="#0e5c2f" 
-          className="animate-blink"
-          transform={eyeTransform}
-        />
-        
-        {/* Screen on chest */}
-        <rect
-          x="75"
-          y="95"
-          width="50"
-          height="30"
-          rx="5"
-          fill="url(#screenGradient)"
-        />
-        
-        {/* Screen content - VBA text */}
-        <text x="100" y="108" textAnchor="middle" fontSize="8" fill="#70ad47" fontFamily="monospace">
-          VBA
-        </text>
-        <text x="100" y="118" textAnchor="middle" fontSize="6" fill="#70ad47" fontFamily="monospace">
-          READY
-        </text>
-        
-        {/* Arms */}
-        <rect 
-          x="45" 
-          y="90" 
-          width="15" 
-          height="40" 
-          rx="7" 
-          fill="url(#robotGradient)"
-          className={isTalking ? 'animate-wiggle' : ''}
-          style={{ transformOrigin: '52px 90px' }}
-        />
-        <rect 
-          x="140" 
-          y="90" 
-          width="15" 
-          height="40" 
-          rx="7" 
-          fill="url(#robotGradient)"
-          className={isTalking ? 'animate-wiggle' : ''}
-          style={{ transformOrigin: '148px 90px', animationDelay: '0.1s' }}
-        />
-        
-        {/* Hands */}
-        <circle cx="52" cy="135" r="8" fill="url(#robotGradient)" />
-        <circle cx="148" cy="135" r="8" fill="url(#robotGradient)" />
-        
-        {/* Legs */}
-        <rect x="75" y="170" width="12" height="25" rx="6" fill="url(#robotGradient)" />
-        <rect x="113" y="170" width="12" height="25" rx="6" fill="url(#robotGradient)" />
-        
-        {/* Antenna */}
-        <line x1="100" y1="40" x2="100" y2="25" stroke="#217346" strokeWidth="2" />
-        <circle cx="100" cy="25" r="4" fill="#70ad47" className="animate-sparkle" />
-        
-        {/* Sparkles around robot */}
-        <circle cx="45" cy="55" r="2" fill="#70ad47" className="animate-sparkle" />
-        <circle cx="155" cy="70" r="2" fill="#217346" className="animate-sparkle" />
-        <circle cx="50" cy="160" r="2" fill="#70ad47" className="animate-sparkle" />
-        <circle cx="150" cy="180" r="2" fill="#217346" className="animate-sparkle" />
-      </svg>
+      {/* AI Platform Links */}
+      <div className="ai-platforms grid grid-cols-3 gap-2 mt-4">
+        {aiPlatforms.map((platform, index) => (
+          <a
+            key={platform.name}
+            href={platform.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ai-platform-link"
+            style={{ 
+              animationDelay: `${index * 0.1}s`,
+              borderColor: `${platform.color}20`
+            }}
+            onMouseEnter={() => showSpeech(`Explore ${platform.name} for AI assistance! Each platform offers unique capabilities for coding and productivity.`)}
+          >
+            {platform.name}
+          </a>
+        ))}
+      </div>
     </div>
   );
 };

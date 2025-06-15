@@ -35,26 +35,26 @@ const CountdownTimer: React.FC = () => {
   }, []);
 
   return (
-    <div className="glass-card rounded-xl p-6 animate-pulse-glow">
-      <h3 className="text-xl font-bold text-green-800 text-center mb-4">
+    <div className="glass-card rounded-xl p-6 animate-pulse-glow shadow-xl">
+      <h3 className="text-xl font-bold text-emerald-800 text-center mb-4">
         Event Starts In
       </h3>
       <div className="grid grid-cols-4 gap-4 text-center">
-        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-emerald-600 to-green-700 text-white rounded-xl p-4 shadow-lg">
           <div className="text-2xl font-bold">{timeLeft.days}</div>
-          <div className="text-sm">Days</div>
+          <div className="text-sm opacity-90">Days</div>
         </div>
-        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-emerald-600 to-green-700 text-white rounded-xl p-4 shadow-lg">
           <div className="text-2xl font-bold">{timeLeft.hours}</div>
-          <div className="text-sm">Hours</div>
+          <div className="text-sm opacity-90">Hours</div>
         </div>
-        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-emerald-600 to-green-700 text-white rounded-xl p-4 shadow-lg">
           <div className="text-2xl font-bold">{timeLeft.minutes}</div>
-          <div className="text-sm">Minutes</div>
+          <div className="text-sm opacity-90">Minutes</div>
         </div>
-        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-emerald-600 to-green-700 text-white rounded-xl p-4 shadow-lg">
           <div className="text-2xl font-bold">{timeLeft.seconds}</div>
-          <div className="text-sm">Seconds</div>
+          <div className="text-sm opacity-90">Seconds</div>
         </div>
       </div>
     </div>
