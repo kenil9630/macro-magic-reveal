@@ -14,7 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTimerClick }) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-blue-600 tracking-tight">
+            <h1 className="text-2xl font-bold text-green-700 tracking-tight">
               Excel Macro Magic
             </h1>
           </div>
@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ onTimerClick }) => {
               className="p-2 rounded-lg glass-card hover:bg-white/20 transition-all duration-300 animate-pulse-glow"
               aria-label="Open Timer"
             >
-              <Timer className="w-5 h-5 text-blue-600" />
+              <Timer className="w-5 h-5 text-green-700" />
             </button>
           </div>
         </div>

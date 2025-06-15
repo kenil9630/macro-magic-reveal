@@ -36,23 +36,23 @@ const CountdownTimer: React.FC = () => {
 
   return (
     <div className="glass-card rounded-xl p-6 animate-pulse-glow">
-      <h3 className="text-xl font-bold text-blue-700 text-center mb-4">
+      <h3 className="text-xl font-bold text-green-800 text-center mb-4">
         Event Starts In
       </h3>
       <div className="grid grid-cols-4 gap-4 text-center">
-        <div className="bg-gradient-to-b from-blue-500 to-blue-600 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
           <div className="text-2xl font-bold">{timeLeft.days}</div>
           <div className="text-sm">Days</div>
         </div>
-        <div className="bg-gradient-to-b from-blue-500 to-blue-600 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
           <div className="text-2xl font-bold">{timeLeft.hours}</div>
           <div className="text-sm">Hours</div>
         </div>
-        <div className="bg-gradient-to-b from-blue-500 to-blue-600 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
           <div className="text-2xl font-bold">{timeLeft.minutes}</div>
           <div className="text-sm">Minutes</div>
         </div>
-        <div className="bg-gradient-to-b from-blue-500 to-blue-600 text-white rounded-lg p-4">
+        <div className="bg-gradient-to-b from-green-600 to-green-700 text-white rounded-lg p-4">
           <div className="text-2xl font-bold">{timeLeft.seconds}</div>
           <div className="text-sm">Seconds</div>
         </div>
