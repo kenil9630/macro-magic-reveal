@@ -1,0 +1,58 @@
+
+/* AI Character Speech Bubble */
+.speech-bubble-top {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--emerald-500);
+  border-radius: 20px;
+  padding: 24px 34px;
+  font-size: 16px;
+  color: var(--emerald-800);
+  max-width: 540px;
+  z-index: 1;
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.4s ease;
+  left: 50%;
+  backdrop-filter: blur(15px);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.speech-bubble-top.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+.speech-bubble-top::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid var(--emerald-500);
+  z-index: 1;
+}
+.speech-bubble-top::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(255, 255, 255, 0.95);
+  z-index: 2;
+}
+@media (max-width: 768px) {
+  .speech-bubble-top {
+    max-width: 400px;
+    font-size: 13px;
+    padding: 18px 16px;
+  }
+}
