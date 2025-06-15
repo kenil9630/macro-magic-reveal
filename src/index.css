@@ -335,7 +335,7 @@
   padding: 24px 34px;
   font-size: 16px;
   color: var(--emerald-800);
-  max-width: 420px;
+  max-width: 540px;
   z-index: 1;
   box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
   transform: translateX(-50%);
@@ -417,7 +417,7 @@
   }
   
   .speech-bubble-top {
-    max-width: 320px;
+    max-width: 400px;
     font-size: 13px;
     padding: 18px 16px;
   }
