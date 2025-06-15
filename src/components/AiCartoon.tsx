@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 
 interface MousePosition {
@@ -13,6 +12,7 @@ const AiCartoon: React.FC = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [currentAnimation, setCurrentAnimation] = useState('float');
   const [currentEmotion, setCurrentEmotion] = useState('happy');
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
   const characterRef = useRef<HTMLDivElement>(null);
 
   const responses = {
@@ -102,23 +102,35 @@ const AiCartoon: React.FC = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleElementHover);
       clearInterval(animationInterval);
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
     };
   }, []);
 
   const showSpeech = (text: string, emotion: string = 'happy') => {
+    // Clear any existing timeout
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+
     setSpeechText(text);
     setCurrentEmotion(emotion);
     setIsVisible(true);
     setIsTalking(true);
     
+    // Stop talking animation after 600ms
     setTimeout(() => {
       setIsTalking(false);
     }, 600);
 
-    setTimeout(() => {
+    // Set a new timeout to hide the speech bubble
+    const timeout = setTimeout(() => {
       setIsVisible(false);
       setCurrentEmotion('happy');
-    }, 4500);
+    }, 5000); // Increased from 8000 to 5000 for better responsiveness
+
+    setHoverTimeout(timeout);
   };
 
   const eyeTransform = `translate(${Math.max(-2, Math.min(2, mousePosition.x * 0.3))}, ${Math.max(-1, Math.min(1, mousePosition.y * 0.2))})`;
@@ -152,11 +164,12 @@ const AiCartoon: React.FC = () => {
   const eyeExpression = getEyeExpression();
 
   return (
-    <div className="flex flex-col items-center space-y-6 relative">
-      <div ref={characterRef} className={`relative animate-${currentAnimation}`}>
+    <div className="flex flex-col items-start space-y-8 relative mt-48 ml-8 w-full">
+      <div ref={characterRef} className={`relative animate-${currentAnimation} mb-4 w-full`}>
         {/* Speech Bubble - positioned above the character */}
         <div 
           className={`speech-bubble-top ${isVisible ? 'visible' : ''}`}
+          style={{ width: '100%' }}
         >
           {speechText}
         </div>
@@ -165,7 +178,7 @@ const AiCartoon: React.FC = () => {
           width="220"
           height="220"
           viewBox="0 0 220 220"
-          className="drop-shadow-2xl relative z-10"
+          className="drop-shadow-2xl relative z-20"
         >
           {/* Gradient Definitions */}
           <defs>
@@ -317,7 +330,7 @@ const AiCartoon: React.FC = () => {
       </div>
 
       {/* AI Platform Links */}
-      <div className="ai-platforms grid grid-cols-3 gap-2 mt-4">
+      <div className="ai-platforms grid grid-cols-3 gap-3 mt-8">
         {aiPlatforms.map((platform, index) => (
           <a
             key={platform.name}

@@ -164,6 +164,23 @@
   75% { transform: rotate(15deg); }
 }
 
+@keyframes countdown-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes countdown-slide {
+  0% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-10px); opacity: 0; }
+  51% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes countdown-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); }
+}
+
 /* Animation Classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
@@ -229,6 +246,18 @@
   animation: wave 0.5s ease-in-out infinite;
 }
 
+.animate-countdown-pulse {
+  animation: countdown-pulse 0.5s ease-in-out;
+}
+
+.animate-countdown-slide {
+  animation: countdown-slide 0.5s ease-in-out;
+}
+
+.animate-countdown-glow {
+  animation: countdown-glow 2s ease-in-out infinite;
+}
+
 /* Excel Cell Styles */
 .excel-cell {
   position: absolute;
@@ -288,54 +317,36 @@
 /* AI Character Speech Bubble */
 .speech-bubble-top {
   position: absolute;
-  background: white;
-  border: 2px solid var(--excel-green-primary);
-  border-radius: 20px;
-  padding: 16px 20px;
-  font-size: 14px;
-  color: var(--excel-green-dark);
-  max-width: 280px;
-  z-index: 5;
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: all 0.4s ease;
-  top: -140px;
   left: 50%;
-  backdrop-filter: blur(10px);
-}
-
-.speech-bubble-top.visible {
+  top: -110px;
+  transform: translateX(-50%);
+  min-width: 280px;
+  max-width: 480px;
+  width: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1.5px solid #a7f3d0;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px 0 rgba(16,185,129,0.13), 0 2px 8px 0 rgba(0,0,0,0.04);
+  padding: 24px 32px;
+  font-size: 13px;
+  color: #065f46;
+  font-weight: 500;
+  z-index: 10;
   opacity: 1;
-  transform: translateX(-50%) translateY(-10px);
-}
-
-.speech-bubble-top::before {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 12px solid var(--excel-green-primary);
-  z-index: 1;
+  transition: opacity 0.4s, top 0.4s, box-shadow 0.3s;
+  backdrop-filter: blur(2px);
 }
 
 .speech-bubble-top::after {
   content: '';
   position: absolute;
-  bottom: -9px;
   left: 50%;
+  top: 100%;
   transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid white;
-  z-index: 2;
+  border-width: 14px 12px 0 12px;
+  border-style: solid;
+  border-color: #a7f3d0 transparent transparent transparent;
+  filter: drop-shadow(0 2px 2px rgba(16,185,129,0.10));
 }
 
 /* AI Platform Links */
@@ -363,25 +374,15 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .excel-cell {
-    font-size: 10px;
-    padding: 2px 4px;
-  }
-  
-  .code-line {
-    font-size: 12px;
-  }
-  
+@media (max-width: 600px) {
   .speech-bubble-top {
-    max-width: 200px;
-    font-size: 12px;
-    padding: 12px 16px;
-    top: -120px;
-  }
-  
-  .ai-platform-link {
+    min-width: 160px;
+    max-width: 95vw;
     font-size: 11px;
-    padding: 6px 8px;
+    padding: 16px 12px;
+    top: -90px;
+  }
+  .speech-bubble-top::after {
+    border-width: 9px 7px 0 7px;
   }
 }
