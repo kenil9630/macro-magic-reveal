@@ -11,6 +11,8 @@ const AiCartoon: React.FC = () => {
   const [speechText, setSpeechText] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
+  const [currentAnimation, setCurrentAnimation] = useState('float');
+  const [currentEmotion, setCurrentEmotion] = useState('happy');
   const characterRef = useRef<HTMLDivElement>(null);
 
   const responses = {
@@ -33,6 +35,9 @@ const AiCartoon: React.FC = () => {
     { name: 'Perplexity', url: 'https://www.perplexity.ai', color: '#20b2aa' }
   ];
 
+  const animations = ['float', 'spin', 'jump', 'think', 'wave'];
+  const emotions = ['happy', 'excited', 'thinking', 'winking'];
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (characterRef.current) {
@@ -50,27 +55,45 @@ const AiCartoon: React.FC = () => {
     const handleElementHover = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       let message = responses.default;
+      let emotion = 'happy';
 
       if (target.closest('[aria-label="Open Timer"]') || target.closest('button[aria-label="Open Timer"]')) {
         message = responses.timer;
+        emotion = 'excited';
       } else if (target.closest('.music-dropdown') || target.textContent?.includes('Music')) {
         message = responses.music;
+        emotion = 'happy';
       } else if (target.closest('.countdown') || target.textContent?.includes('Event Starts')) {
         message = responses.countdown;
+        emotion = 'excited';
       } else if (target.closest('.code-writer') || target.textContent?.includes('VBA') || target.textContent?.includes('Sub ')) {
         message = responses.codewriter;
+        emotion = 'thinking';
       } else if (target.closest('h1') && target.textContent?.includes('AI Write')) {
         message = responses.title;
+        emotion = 'winking';
       } else if (target.closest('.event-details') || target.textContent?.includes('Reliance') || target.textContent?.includes('Teams')) {
         message = responses.details;
+        emotion = 'happy';
       } else if (target.closest('.ai-platforms')) {
         message = responses.platforms;
+        emotion = 'thinking';
       }
 
       if (message !== responses.default) {
-        showSpeech(message);
+        showSpeech(message, emotion);
       }
     };
+
+    // Random animation changes
+    const animationInterval = setInterval(() => {
+      const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+      setCurrentAnimation(randomAnimation);
+      
+      setTimeout(() => {
+        setCurrentAnimation('float');
+      }, 2000);
+    }, 8000);
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseover', handleElementHover);
@@ -78,11 +101,13 @@ const AiCartoon: React.FC = () => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleElementHover);
+      clearInterval(animationInterval);
     };
   }, []);
 
-  const showSpeech = (text: string) => {
+  const showSpeech = (text: string, emotion: string = 'happy') => {
     setSpeechText(text);
+    setCurrentEmotion(emotion);
     setIsVisible(true);
     setIsTalking(true);
     
@@ -92,17 +117,46 @@ const AiCartoon: React.FC = () => {
 
     setTimeout(() => {
       setIsVisible(false);
+      setCurrentEmotion('happy');
     }, 4500);
   };
 
   const eyeTransform = `translate(${Math.max(-2, Math.min(2, mousePosition.x * 0.3))}, ${Math.max(-1, Math.min(1, mousePosition.y * 0.2))})`;
 
+  const getEyeExpression = () => {
+    switch (currentEmotion) {
+      case 'excited':
+        return { leftEye: 12, rightEye: 12 };
+      case 'thinking':
+        return { leftEye: 8, rightEye: 6 };
+      case 'winking':
+        return { leftEye: 8, rightEye: 0 };
+      default:
+        return { leftEye: 8, rightEye: 8 };
+    }
+  };
+
+  const getMouthExpression = () => {
+    switch (currentEmotion) {
+      case 'excited':
+        return "M 95 75 Q 110 85 125 75";
+      case 'thinking':
+        return "M 105 78 L 115 78";
+      case 'winking':
+        return "M 100 75 Q 110 82 120 75";
+      default:
+        return "M 100 75 Q 110 82 120 75";
+    }
+  };
+
+  const eyeExpression = getEyeExpression();
+
   return (
-    <div className="flex flex-col items-center space-y-6">
-      <div ref={characterRef} className="relative animate-float">
-        {/* Speech Bubble */}
+    <div className="flex flex-col items-center space-y-6 relative">
+      <div ref={characterRef} className={`relative animate-${currentAnimation}`}>
+        {/* Speech Bubble - positioned above the character */}
         <div 
-          className={`speech-bubble ${isVisible ? 'visible' : ''}`}
+          className={`speech-bubble-top ${isVisible ? 'visible' : ''}`}
         >
           {speechText}
         </div>
@@ -111,7 +165,7 @@ const AiCartoon: React.FC = () => {
           width="220"
           height="220"
           viewBox="0 0 220 220"
-          className="drop-shadow-2xl"
+          className="drop-shadow-2xl relative z-10"
         >
           {/* Gradient Definitions */}
           <defs>
@@ -165,7 +219,7 @@ const AiCartoon: React.FC = () => {
           <circle 
             cx="95" 
             cy="60" 
-            r="4" 
+            r={eyeExpression.leftEye} 
             fill="#064e3b" 
             className="animate-blink"
             transform={eyeTransform}
@@ -173,7 +227,7 @@ const AiCartoon: React.FC = () => {
           <circle 
             cx="125" 
             cy="60" 
-            r="4" 
+            r={eyeExpression.rightEye} 
             fill="#064e3b" 
             className="animate-blink"
             transform={eyeTransform}
@@ -185,7 +239,7 @@ const AiCartoon: React.FC = () => {
           
           {/* Mouth */}
           <path 
-            d="M 100 75 Q 110 82 120 75" 
+            d={getMouthExpression()}
             stroke="#064e3b" 
             strokeWidth="2" 
             fill="none"
@@ -218,7 +272,7 @@ const AiCartoon: React.FC = () => {
             rx="8" 
             ry="25" 
             fill="url(#bodyGradient)"
-            className={isTalking ? 'animate-wiggle' : ''}
+            className={isTalking ? 'animate-wiggle' : currentAnimation === 'wave' ? 'animate-wave' : ''}
             style={{ transformOrigin: '55px 90px' }}
           />
           <ellipse 
@@ -227,7 +281,7 @@ const AiCartoon: React.FC = () => {
             rx="8" 
             ry="25" 
             fill="url(#bodyGradient)"
-            className={isTalking ? 'animate-wiggle' : ''}
+            className={isTalking ? 'animate-wiggle' : currentAnimation === 'wave' ? 'animate-wave' : ''}
             style={{ transformOrigin: '165px 90px', animationDelay: '0.1s' }}
           />
           
@@ -242,6 +296,15 @@ const AiCartoon: React.FC = () => {
           {/* Antenna */}
           <line x1="110" y1="30" x2="110" y2="15" stroke="#059669" strokeWidth="3" />
           <circle cx="110" cy="12" r="5" fill="#10b981" className="animate-sparkle" filter="url(#glow)" />
+          
+          {/* Thinking bubbles for thinking emotion */}
+          {currentEmotion === 'thinking' && (
+            <>
+              <circle cx="140" cy="40" r="3" fill="#6ee7b7" className="animate-float" opacity="0.7" />
+              <circle cx="150" cy="30" r="2" fill="#10b981" className="animate-float" opacity="0.5" style={{ animationDelay: '0.5s' }} />
+              <circle cx="155" cy="20" r="1.5" fill="#6ee7b7" className="animate-float" opacity="0.3" style={{ animationDelay: '1s' }} />
+            </>
+          )}
           
           {/* Sparkles around robot */}
           <circle cx="50" cy="50" r="2" fill="#6ee7b7" className="animate-sparkle" />

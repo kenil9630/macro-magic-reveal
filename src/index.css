@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -142,6 +141,29 @@
   50% { transform: scaleY(1.1); }
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg) translateY(0px); }
+  50% { transform: rotate(180deg) translateY(-10px); }
+  100% { transform: rotate(360deg) translateY(0px); }
+}
+
+@keyframes jump {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-30px); }
+}
+
+@keyframes think {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-5px) rotate(-2deg); }
+  75% { transform: translateY(-5px) rotate(2deg); }
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  75% { transform: rotate(15deg); }
+}
+
 /* Animation Classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
@@ -189,6 +211,22 @@
 
 .animate-talk {
   animation: talk 0.3s ease-in-out;
+}
+
+.animate-spin {
+  animation: spin 2s ease-in-out;
+}
+
+.animate-jump {
+  animation: jump 1s ease-in-out;
+}
+
+.animate-think {
+  animation: think 2s ease-in-out;
+}
+
+.animate-wave {
+  animation: wave 0.5s ease-in-out infinite;
 }
 
 /* Excel Cell Styles */
@@ -248,7 +286,7 @@
 }
 
 /* AI Character Speech Bubble */
-.speech-bubble {
+.speech-bubble-top {
   position: absolute;
   background: white;
   border: 2px solid var(--excel-green-primary);
@@ -257,21 +295,22 @@
   font-size: 14px;
   color: var(--excel-green-dark);
   max-width: 280px;
-  z-index: 1000;
+  z-index: 5;
   box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
   transform: translateX(-50%);
   opacity: 0;
   transition: all 0.4s ease;
-  top: -120px;
+  top: -140px;
   left: 50%;
+  backdrop-filter: blur(10px);
 }
 
-.speech-bubble.visible {
+.speech-bubble-top.visible {
   opacity: 1;
   transform: translateX(-50%) translateY(-10px);
 }
 
-.speech-bubble::before {
+.speech-bubble-top::before {
   content: '';
   position: absolute;
   bottom: -12px;
@@ -282,9 +321,10 @@
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
   border-top: 12px solid var(--excel-green-primary);
+  z-index: 1;
 }
 
-.speech-bubble::after {
+.speech-bubble-top::after {
   content: '';
   position: absolute;
   bottom: -9px;
@@ -295,6 +335,7 @@
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-top: 10px solid white;
+  z-index: 2;
 }
 
 /* AI Platform Links */
@@ -332,11 +373,11 @@
     font-size: 12px;
   }
   
-  .speech-bubble {
+  .speech-bubble-top {
     max-width: 200px;
     font-size: 12px;
     padding: 12px 16px;
-    top: -100px;
+    top: -120px;
   }
   
   .ai-platform-link {
