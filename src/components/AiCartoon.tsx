@@ -13,6 +13,7 @@ const AiCartoon: React.FC = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [currentAnimation, setCurrentAnimation] = useState('float');
   const [currentEmotion, setCurrentEmotion] = useState('happy');
+  const [isBlinking, setIsBlinking] = useState(false);
   const characterRef = useRef<HTMLDivElement>(null);
 
   const responses = {
@@ -46,8 +47,8 @@ const AiCartoon: React.FC = () => {
         const centerY = rect.top + rect.height / 2;
         
         setMousePosition({
-          x: (e.clientX - centerX) / 15,
-          y: (e.clientY - centerY) / 15
+          x: (e.clientX - centerX) / 20,
+          y: (e.clientY - centerY) / 20
         });
       }
     };
@@ -95,6 +96,12 @@ const AiCartoon: React.FC = () => {
       }, 2000);
     }, 8000);
 
+    // Blinking animation
+    const blinkInterval = setInterval(() => {
+      setIsBlinking(true);
+      setTimeout(() => setIsBlinking(false), 150);
+    }, 3000);
+
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseover', handleElementHover);
 
@@ -102,6 +109,7 @@ const AiCartoon: React.FC = () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseover', handleElementHover);
       clearInterval(animationInterval);
+      clearInterval(blinkInterval);
     };
   }, []);
 
@@ -121,31 +129,33 @@ const AiCartoon: React.FC = () => {
     }, 4500);
   };
 
-  const eyeTransform = `translate(${Math.max(-2, Math.min(2, mousePosition.x * 0.3))}, ${Math.max(-1, Math.min(1, mousePosition.y * 0.2))})`;
+  const eyeTransform = `translate(${Math.max(-3, Math.min(3, mousePosition.x * 0.2))}, ${Math.max(-2, Math.min(2, mousePosition.y * 0.15))})`;
 
   const getEyeExpression = () => {
+    if (isBlinking) return { leftEye: 2, rightEye: 2 };
+    
     switch (currentEmotion) {
       case 'excited':
-        return { leftEye: 12, rightEye: 12 };
+        return { leftEye: 14, rightEye: 14 };
       case 'thinking':
-        return { leftEye: 8, rightEye: 6 };
+        return { leftEye: 10, rightEye: 8 };
       case 'winking':
-        return { leftEye: 8, rightEye: 0 };
+        return { leftEye: 10, rightEye: 2 };
       default:
-        return { leftEye: 8, rightEye: 8 };
+        return { leftEye: 10, rightEye: 10 };
     }
   };
 
   const getMouthExpression = () => {
     switch (currentEmotion) {
       case 'excited':
-        return "M 95 75 Q 110 85 125 75";
+        return "M 90 80 Q 110 95 130 80";
       case 'thinking':
-        return "M 105 78 L 115 78";
+        return "M 105 85 Q 110 82 115 85";
       case 'winking':
-        return "M 100 75 Q 110 82 120 75";
+        return "M 95 80 Q 110 90 125 80";
       default:
-        return "M 100 75 Q 110 82 120 75";
+        return "M 95 80 Q 110 90 125 80";
     }
   };
 
@@ -153,166 +163,195 @@ const AiCartoon: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-6 relative">
-      <div ref={characterRef} className={`relative animate-${currentAnimation}`}>
-        {/* Speech Bubble - positioned above the character */}
+      <div ref={characterRef} className={`relative animate-${currentAnimation}`} style={{ paddingTop: '60px' }}>
+        {/* Speech Bubble - positioned well above the character */}
         <div 
           className={`speech-bubble-top ${isVisible ? 'visible' : ''}`}
+          style={{ top: '-200px', zIndex: 1 }}
         >
           {speechText}
         </div>
 
         <svg
-          width="220"
-          height="220"
-          viewBox="0 0 220 220"
+          width="240"
+          height="240"
+          viewBox="0 0 240 240"
           className="drop-shadow-2xl relative z-10"
         >
           {/* Gradient Definitions */}
           <defs>
             <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#065f46" />
-              <stop offset="50%" stopColor="#059669" />
-              <stop offset="100%" stopColor="#10b981" />
+              <stop offset="0%" stopColor="#bbf7d0" />
+              <stop offset="50%" stopColor="#86efac" />
+              <stop offset="100%" stopColor="#4ade80" />
             </linearGradient>
             <linearGradient id="headGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#047857" />
-              <stop offset="100%" stopColor="#059669" />
+              <stop offset="0%" stopColor="#dcfce7" />
+              <stop offset="100%" stopColor="#bbf7d0" />
             </linearGradient>
-            <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#064e3b" />
-              <stop offset="100%" stopColor="#065f46" />
+            <linearGradient id="eyeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#1f2937" />
+              <stop offset="100%" stopColor="#374151" />
+            </linearGradient>
+            <linearGradient id="cheekGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fecaca" />
+              <stop offset="100%" stopColor="#f87171" />
             </linearGradient>
             <filter id="glow">
-              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
               <feMerge> 
                 <feMergeNode in="coloredBlur"/>
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
             </filter>
+            <filter id="softShadow">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#059669" floodOpacity="0.3"/>
+            </filter>
           </defs>
           
-          {/* Main Body */}
-          <rect
-            x="70"
-            y="90"
-            width="80"
-            height="95"
-            rx="20"
+          {/* Main Body - more rounded and cute */}
+          <ellipse
+            cx="120"
+            cy="140"
+            rx="45"
+            ry="55"
             fill="url(#bodyGradient)"
             className="animate-pulse-glow"
-            filter="url(#glow)"
+            filter="url(#softShadow)"
           />
           
-          {/* Head */}
+          {/* Head - larger and rounder */}
           <circle
-            cx="110"
-            cy="65"
-            r="35"
+            cx="120"
+            cy="80"
+            r="45"
             fill="url(#headGradient)"
             className={isTalking ? 'animate-talk' : ''}
-            filter="url(#glow)"
+            filter="url(#softShadow)"
           />
           
-          {/* Eyes */}
-          <circle cx="95" cy="60" r="8" fill="#fff" />
-          <circle cx="125" cy="60" r="8" fill="#fff" />
+          {/* Cute cheeks */}
+          <circle cx="85" cy="85" r="8" fill="url(#cheekGradient)" opacity="0.6" />
+          <circle cx="155" cy="85" r="8" fill="url(#cheekGradient)" opacity="0.6" />
+          
+          {/* Eyes - larger and more expressive */}
+          <ellipse cx="100" cy="70" rx="12" ry="15" fill="#ffffff" />
+          <ellipse cx="140" cy="70" rx="12" ry="15" fill="#ffffff" />
+          
+          {/* Eye pupils */}
           <circle 
-            cx="95" 
-            cy="60" 
+            cx="100" 
+            cy="70" 
             r={eyeExpression.leftEye} 
-            fill="#064e3b" 
-            className="animate-blink"
+            fill="url(#eyeGradient)" 
             transform={eyeTransform}
           />
           <circle 
-            cx="125" 
-            cy="60" 
+            cx="140" 
+            cy="70" 
             r={eyeExpression.rightEye} 
-            fill="#064e3b" 
-            className="animate-blink"
+            fill="url(#eyeGradient)" 
             transform={eyeTransform}
           />
           
-          {/* Eye highlights */}
-          <circle cx="96" cy="58" r="1.5" fill="#fff" opacity="0.8" />
-          <circle cx="126" cy="58" r="1.5" fill="#fff" opacity="0.8" />
+          {/* Eye highlights - bigger and cuter */}
+          <circle cx="98" cy="66" r="3" fill="#ffffff" opacity="0.9" />
+          <circle cx="138" cy="66" r="3" fill="#ffffff" opacity="0.9" />
+          <circle cx="102" cy="68" r="1.5" fill="#ffffff" opacity="0.7" />
+          <circle cx="142" cy="68" r="1.5" fill="#ffffff" opacity="0.7" />
           
-          {/* Mouth */}
+          {/* Eyebrows - cute and expressive */}
+          <path d="M 88 55 Q 100 50 112 55" stroke="#6b7280" strokeWidth="3" strokeLinecap="round" fill="none" />
+          <path d="M 128 55 Q 140 50 152 55" stroke="#6b7280" strokeWidth="3" strokeLinecap="round" fill="none" />
+          
+          {/* Nose - small and cute */}
+          <circle cx="120" cy="82" r="2" fill="#f87171" opacity="0.8" />
+          
+          {/* Mouth - more expressive */}
           <path 
             d={getMouthExpression()}
-            stroke="#064e3b" 
-            strokeWidth="2" 
+            stroke="#374151" 
+            strokeWidth="3" 
             fill="none"
+            strokeLinecap="round"
             className={isTalking ? 'animate-talk' : ''}
           />
           
-          {/* Screen on chest */}
-          <rect
-            x="85"
-            y="105"
-            width="50"
-            height="35"
-            rx="8"
-            fill="url(#screenGradient)"
-            filter="url(#glow)"
-          />
-          
-          {/* Screen content */}
-          <text x="110" y="118" textAnchor="middle" fontSize="10" fill="#10b981" fontFamily="monospace" fontWeight="bold">
-            VBA
-          </text>
-          <text x="110" y="130" textAnchor="middle" fontSize="7" fill="#6ee7b7" fontFamily="monospace">
-            ASSISTANT
-          </text>
-          
-          {/* Arms */}
+          {/* Cute little arms */}
           <ellipse 
-            cx="55" 
-            cy="115" 
-            rx="8" 
-            ry="25" 
+            cx="70" 
+            cy="120" 
+            rx="12" 
+            ry="30" 
             fill="url(#bodyGradient)"
             className={isTalking ? 'animate-wiggle' : currentAnimation === 'wave' ? 'animate-wave' : ''}
-            style={{ transformOrigin: '55px 90px' }}
+            style={{ transformOrigin: '70px 90px' }}
+            filter="url(#softShadow)"
           />
           <ellipse 
-            cx="165" 
-            cy="115" 
-            rx="8" 
-            ry="25" 
+            cx="170" 
+            cy="120" 
+            rx="12" 
+            ry="30" 
             fill="url(#bodyGradient)"
             className={isTalking ? 'animate-wiggle' : currentAnimation === 'wave' ? 'animate-wave' : ''}
-            style={{ transformOrigin: '165px 90px', animationDelay: '0.1s' }}
+            style={{ transformOrigin: '170px 90px', animationDelay: '0.1s' }}
+            filter="url(#softShadow)"
           />
           
-          {/* Hands */}
-          <circle cx="55" cy="145" r="10" fill="url(#bodyGradient)" />
-          <circle cx="165" cy="145" r="10" fill="url(#bodyGradient)" />
+          {/* Cute hands */}
+          <circle cx="70" cy="155" r="12" fill="url(#bodyGradient)" filter="url(#softShadow)" />
+          <circle cx="170" cy="155" r="12" fill="url(#bodyGradient)" filter="url(#softShadow)" />
           
-          {/* Legs */}
-          <rect x="85" y="185" width="15" height="30" rx="7" fill="url(#bodyGradient)" />
-          <rect x="115" y="185" width="15" height="30" rx="7" fill="url(#bodyGradient)" />
+          {/* Little legs */}
+          <ellipse cx="105" cy="200" rx="10" ry="20" fill="url(#bodyGradient)" filter="url(#softShadow)" />
+          <ellipse cx="135" cy="200" rx="10" ry="20" fill="url(#bodyGradient)" filter="url(#softShadow)" />
           
-          {/* Antenna */}
-          <line x1="110" y1="30" x2="110" y2="15" stroke="#059669" strokeWidth="3" />
-          <circle cx="110" cy="12" r="5" fill="#10b981" className="animate-sparkle" filter="url(#glow)" />
+          {/* Cute feet */}
+          <ellipse cx="105" cy="225" rx="8" ry="6" fill="#4ade80" />
+          <ellipse cx="135" cy="225" rx="8" ry="6" fill="#4ade80" />
+          
+          {/* Cute little hat */}
+          <ellipse cx="120" cy="35" rx="35" ry="8" fill="#059669" />
+          <circle cx="120" cy="25" r="20" fill="#10b981" filter="url(#softShadow)" />
+          <circle cx="120" cy="15" r="6" fill="#fbbf24" className="animate-sparkle" />
           
           {/* Thinking bubbles for thinking emotion */}
           {currentEmotion === 'thinking' && (
             <>
-              <circle cx="140" cy="40" r="3" fill="#6ee7b7" className="animate-float" opacity="0.7" />
-              <circle cx="150" cy="30" r="2" fill="#10b981" className="animate-float" opacity="0.5" style={{ animationDelay: '0.5s' }} />
-              <circle cx="155" cy="20" r="1.5" fill="#6ee7b7" className="animate-float" opacity="0.3" style={{ animationDelay: '1s' }} />
+              <circle cx="170" cy="50" r="4" fill="#a7f3d0" className="animate-float" opacity="0.8" />
+              <circle cx="185" cy="35" r="3" fill="#6ee7b7" className="animate-float" opacity="0.6" style={{ animationDelay: '0.5s' }} />
+              <circle cx="195" cy="20" r="2" fill="#34d399" className="animate-float" opacity="0.4" style={{ animationDelay: '1s' }} />
             </>
           )}
           
-          {/* Sparkles around robot */}
-          <circle cx="50" cy="50" r="2" fill="#6ee7b7" className="animate-sparkle" />
-          <circle cx="170" cy="70" r="2" fill="#10b981" className="animate-sparkle" />
-          <circle cx="45" cy="170" r="2" fill="#6ee7b7" className="animate-sparkle" />
-          <circle cx="175" cy="190" r="2" fill="#10b981" className="animate-sparkle" />
-          <circle cx="200" cy="120" r="2" fill="#6ee7b7" className="animate-sparkle" />
-          <circle cx="20" cy="130" r="2" fill="#10b981" className="animate-sparkle" />
+          {/* Heart when excited */}
+          {currentEmotion === 'excited' && (
+            <path 
+              d="M 180 60 C 180 55, 190 55, 190 65 C 190 55, 200 55, 200 60 C 200 70, 190 80, 190 80 C 190 80, 180 70, 180 60 Z" 
+              fill="#f87171" 
+              className="animate-bounce-in"
+              opacity="0.8"
+            />
+          )}
+          
+          {/* Sparkles around character */}
+          <circle cx="50" cy="60" r="2" fill="#fbbf24" className="animate-sparkle" />
+          <circle cx="190" cy="80" r="2" fill="#10b981" className="animate-sparkle" />
+          <circle cx="40" cy="180" r="2" fill="#fbbf24" className="animate-sparkle" />
+          <circle cx="200" cy="200" r="2" fill="#10b981" className="animate-sparkle" />
+          <circle cx="210" cy="130" r="2" fill="#fbbf24" className="animate-sparkle" />
+          <circle cx="30" cy="140" r="2" fill="#10b981" className="animate-sparkle" />
+          
+          {/* Breathing effect */}
+          <circle 
+            cx="120" 
+            cy="140" 
+            r="3" 
+            fill="#4ade80" 
+            opacity="0.4" 
+            className="animate-pulse"
+          />
         </svg>
       </div>
 

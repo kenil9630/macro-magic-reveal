@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -37,22 +38,38 @@
   }
 }
 
-/* Elegant Excel Green Color Variables */
+/* Elegant Color Variables */
 :root {
-  --excel-green-dark: #0d4f2c;
-  --excel-green-primary: #1a6b3a;
-  --excel-green-medium: #2d7a4a;
-  --excel-green-light: #4ade80;
-  --excel-green-pale: #bbf7d0;
-  --excel-accent: #10b981;
-  --excel-mint: #6ee7b7;
+  --emerald-50: #ecfdf5;
+  --emerald-100: #d1fae5;
+  --emerald-200: #a7f3d0;
+  --emerald-300: #6ee7b7;
+  --emerald-400: #34d399;
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+  --emerald-900: #064e3b;
+  --green-50: #f0fdf4;
+  --green-100: #dcfce7;
+  --green-200: #bbf7d0;
+  --green-300: #86efac;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-800: #166534;
+  --green-900: #14532d;
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
   --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
   --gray-600: #4b5563;
   --gray-700: #374151;
   --gray-800: #1f2937;
+  --gray-900: #111827;
 }
 
 /* Enhanced Glassmorphism Effects */
@@ -99,8 +116,14 @@
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
-  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.7); }
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.7);
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.9);
+  }
 }
 
 @keyframes slideInFromTop {
@@ -162,6 +185,16 @@
   0%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(-15deg); }
   75% { transform: rotate(15deg); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.05); opacity: 0.8; }
 }
 
 /* Animation Classes */
@@ -229,6 +262,14 @@
   animation: wave 0.5s ease-in-out infinite;
 }
 
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
 /* Excel Cell Styles */
 .excel-cell {
   position: absolute;
@@ -245,10 +286,11 @@
 /* Sparkle Effects */
 .sparkle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: linear-gradient(45deg, var(--excel-green-primary), var(--excel-green-light));
+  width: 6px;
+  height: 6px;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
   border-radius: 50%;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
 }
 
 /* Code Writer Styles */
@@ -256,13 +298,13 @@
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 14px;
   line-height: 1.6;
-  color: var(--excel-green-dark);
+  color: var(--emerald-800);
 }
 
 .typing-cursor::after {
   content: '|';
   animation: blink 1s infinite;
-  color: var(--excel-green-primary);
+  color: var(--emerald-600);
 }
 
 /* Progress Dots */
@@ -276,33 +318,34 @@
 }
 
 .progress-dot.active {
-  background: var(--excel-green-primary);
+  background: var(--emerald-600);
   transform: scale(1.2);
 }
 
 .progress-dot:hover {
-  background: var(--excel-green-dark);
+  background: var(--emerald-700);
   transform: scale(1.1);
 }
 
 /* AI Character Speech Bubble */
 .speech-bubble-top {
   position: absolute;
-  background: white;
-  border: 2px solid var(--excel-green-primary);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--emerald-500);
   border-radius: 20px;
   padding: 16px 20px;
   font-size: 14px;
-  color: var(--excel-green-dark);
-  max-width: 280px;
-  z-index: 5;
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
+  color: var(--emerald-800);
+  max-width: 300px;
+  z-index: 1;
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
   transform: translateX(-50%);
   opacity: 0;
   transition: all 0.4s ease;
-  top: -140px;
   left: 50%;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .speech-bubble-top.visible {
@@ -320,7 +363,7 @@
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-top: 12px solid var(--excel-green-primary);
+  border-top: 12px solid var(--emerald-500);
   z-index: 1;
 }
 
@@ -334,7 +377,7 @@
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid white;
+  border-top: 10px solid rgba(255, 255, 255, 0.95);
   z-index: 2;
 }
 
@@ -343,23 +386,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 8px;
-  color: var(--excel-green-dark);
+  border-radius: 10px;
+  color: var(--emerald-800);
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
 }
 
 .ai-platform-link:hover {
   background: rgba(16, 185, 129, 0.1);
-  border-color: var(--excel-green-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  border-color: var(--emerald-500);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.25);
 }
 
 /* Responsive Design */
@@ -374,14 +418,18 @@
   }
   
   .speech-bubble-top {
-    max-width: 200px;
+    max-width: 250px;
     font-size: 12px;
     padding: 12px 16px;
-    top: -120px;
   }
   
   .ai-platform-link {
     font-size: 11px;
-    padding: 6px 8px;
+    padding: 8px 10px;
+  }
+  
+  .sparkle {
+    width: 4px;
+    height: 4px;
   }
 }
