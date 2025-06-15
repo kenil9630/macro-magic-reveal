@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -68,4 +69,9 @@
     width: 4px;
     height: 4px;
   }
+}
+
+/* MAINTAINED: Wider speech bubble for desktop */
+.speech-bubble-top {
+  max-width: 650px;
 }
