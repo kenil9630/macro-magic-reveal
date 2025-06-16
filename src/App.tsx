@@ -14,10 +14,10 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Router basename="/">
+      <Router basename="/training/vba">
         <Routes>
           <Route path="/" element={<UnderConstruction />} />
-          <Route path="/training/vba" element={<Index />} />
+          <Route path="/vba" element={<Index />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
