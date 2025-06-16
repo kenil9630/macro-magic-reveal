@@ -18,7 +18,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<UnderConstruction />} />
           <Route path="/vba" element={<Index />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
         </Routes>
       </Router>
     </TooltipProvider>
